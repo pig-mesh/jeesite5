@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.Filter;
 
+import com.jeesite.common.shiro.realm.PigxAuthRealm;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cas.CasSubjectFactory;
 import org.apache.shiro.realm.Realm;
@@ -85,6 +86,12 @@ public class ShiroConfig {
 		bean.setAuthorizingRealm(casAuthorizingRealm);
 		return bean;
 	}
+
+	private FormFilter shiroPigxFilter(PigxAuthRealm pigxAuthRealm) {
+		FormFilter bean = new FormFilter();
+		bean.setAuthorizingRealm(pigxAuthRealm);
+		return bean;
+	}
 	
 	/**
 	 * LDAP登录过滤器
@@ -147,8 +154,8 @@ public class ShiroConfig {
 	 * Shiro认证过滤器
 	 */
 	@Bean
-	public ShiroFilterFactoryBean shiroFilter(WebSecurityManager webSecurityManager, AuthorizingRealm authorizingRealm, 
-			CasAuthorizingRealm casAuthorizingRealm, LdapAuthorizingRealm ldapAuthorizingRealm) {
+	public ShiroFilterFactoryBean shiroFilter(WebSecurityManager webSecurityManager, AuthorizingRealm authorizingRealm,
+											  CasAuthorizingRealm casAuthorizingRealm, LdapAuthorizingRealm ldapAuthorizingRealm, PigxAuthRealm pigxAuthRealm) {
 		ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
 		bean.setSecurityManager(webSecurityManager);
 		bean.setLoginUrl(Global.getProperty("shiro.loginUrl"));
@@ -156,6 +163,7 @@ public class ShiroConfig {
 		Map<String, Filter> filters = bean.getFilters();
 		filters.put("inner", shiroInnerFilter());
 		filters.put("cas", shiroCasFilter(casAuthorizingRealm));
+		filters.put("pigx", shiroPigxFilter(pigxAuthRealm));
 		filters.put("ldap", shiroLdapFilter(ldapAuthorizingRealm));
 		filters.put("authc", shiroAuthcFilter(authorizingRealm));
 		filters.put("logout", shiroLogoutFilter(authorizingRealm));
@@ -176,6 +184,14 @@ public class ShiroConfig {
 	@Bean
 	public AuthorizingRealm authorizingRealm(SessionDAO sessionDAO) {
 		AuthorizingRealm bean = new AuthorizingRealm();
+		bean.setSessionDAO(sessionDAO);
+		return bean;
+	}
+
+
+	@Bean
+	public PigxAuthRealm pigxAuthRealm(SessionDAO sessionDAO) {
+		PigxAuthRealm bean = new PigxAuthRealm();
 		bean.setSessionDAO(sessionDAO);
 		return bean;
 	}
@@ -219,12 +235,14 @@ public class ShiroConfig {
 	 */
 	@Bean
 	public WebSecurityManager webSecurityManager(AuthorizingRealm authorizingRealm, CasAuthorizingRealm casAuthorizingRealm,
-			LdapAuthorizingRealm ldapAuthorizingRealm, SessionManager sessionManager, CacheManager shiroCacheManager) {
+			LdapAuthorizingRealm ldapAuthorizingRealm, SessionManager sessionManager, CacheManager shiroCacheManager, PigxAuthRealm pigxAuthRealm) {
 		WebSecurityManager bean = new WebSecurityManager();
 		Collection<Realm> realms = ListUtils.newArrayList();
 		realms.add(authorizingRealm); // 第一个为权限授权控制类
 		realms.add(casAuthorizingRealm);
 		realms.add(ldapAuthorizingRealm);
+		realms.add(ldapAuthorizingRealm);
+		realms.add(pigxAuthRealm);
 		bean.setRealms(realms);
 		bean.setSessionManager(sessionManager);
 		bean.setCacheManager(shiroCacheManager);

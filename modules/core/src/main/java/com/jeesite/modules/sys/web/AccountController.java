@@ -10,15 +10,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.common.shiro.authc.PigxToken;
+import com.jeesite.common.shiro.realm.LoginInfo;
 import org.apache.shiro.authc.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.jeesite.common.codec.DesUtils;
 import com.jeesite.common.collect.MapUtils;
@@ -49,7 +48,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @Controller
 @Api(tags = "Account - 账号服务")
-@RequestMapping(value = "/account")
+@RequestMapping(value = "${adminPath}/account")
 @ConditionalOnProperty(name={"user.enabled","web.core.enabled"}, havingValue="true", matchIfMissing=true)
 public class AccountController extends BaseController{
 
@@ -98,11 +97,26 @@ public class AccountController extends BaseController{
 		try {
 			formToken.setInnerLogin(true); // 因为手机验证码已验证，所以无需再进行验证密码
 			UserUtils.getSubject().login(formToken);
-			FormFilter.onLoginSuccess(request, response);
+			FormFilter.onLoginSuccess(request,response);
         } catch (AuthenticationException e) {
         	FormFilter.onLoginFailure(e, request, response);
         }
 		return null;
+	}
+
+
+	@PostMapping("/loginByCode")
+	@ResponseBody
+	public Object loginByCode(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response){
+
+		PigxToken pigxToken = new PigxToken();
+		pigxToken.setCode(code);
+		pigxToken.setUsername("admin");
+
+		UserUtils.getSubject().login(pigxToken);
+		LoginInfo loginInfo = UserUtils.getLoginInfo();
+		return loginInfo;
+
 	}
 	
 	/**
@@ -428,7 +442,7 @@ public class AccountController extends BaseController{
 	/**
 	 * 根据短信或邮件验证码注册用户（通过邮箱、手机号）
 	 * @param user 用户信息参数
-	 * @param validType 验证方式：mobile、email
+	 * @param regValidCode 验证方式：mobile、email
 	 */
 	@PostMapping(value = "saveRegByValidCode")
 	@ResponseBody

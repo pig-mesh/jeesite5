@@ -54,9 +54,9 @@ jdbc:
   # Mysql 数据库配置
   type: mysql
   driver: com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://127.0.0.1:3306/jeesite_v5?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
+  url: jdbc:mysql://172.27.0.5:3306/jeesite?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
   username: root
-  password: 123456
+  password: root
   testSql: SELECT 1
 
 #  # Oracle 数据库配置（若使用 12c，请修改 /modules/core/pom.xml 文件，打开 12c 依赖，去掉 11g 依赖）

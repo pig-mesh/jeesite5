@@ -440,6 +440,7 @@ shiro:
     ${adminPath}/login-cas = cas
     ${adminPath}/login-ldap = ldap
     ${adminPath}/login = authc
+    ${adminPath}/account/* = anon
     ${adminPath}/logout = logout
     ${adminPath}/file/** = user
     ${adminPath}/switchSkin/* = anon
