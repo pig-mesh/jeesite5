@@ -1,5 +1,6 @@
 ## pig 整合前后端分离项目登录
 
+
 ![](https://minio.pigx.vip/alei/2023/01/5331045f8c867c6ae6c4e62aa6434850.png)
 
 ```sql
@@ -17,7 +18,7 @@ INSERT INTO `pig`.`sys_oauth_client_details`(`client_id`, `resource_ids`, `clien
   
 
 ## 前端配置
-
+前端地址 https://github.com/pig-mesh/jeesite-vue  
 - 登录页面配置
 ![](https://minio.pigx.vip/alei/2023/01/17ad9445a17f4acdb6fe47553c02e7bd.png)
 
