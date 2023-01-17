@@ -1,0 +1,6 @@
+sso:
+    scope: server
+    client-id: jeesite
+    client-secret: jeesite
+    callback-url: http://127.0.0.1:3100/sso  #业务系统的SSO 登录页面
+    gateway-server: http://127.0.0.1:9999     # pig  网关地址

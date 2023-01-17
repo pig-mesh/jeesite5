@@ -107,16 +107,17 @@ public class AccountController extends BaseController{
 
 	@PostMapping("/loginByCode")
 	@ResponseBody
-	public Object loginByCode(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response){
+	public String loginByCode(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response){
+		try {
+			PigxToken pigxToken = new PigxToken();
+			pigxToken.setCode(code);
 
-		PigxToken pigxToken = new PigxToken();
-		pigxToken.setCode(code);
-		pigxToken.setUsername("admin");
-
-		UserUtils.getSubject().login(pigxToken);
-		LoginInfo loginInfo = UserUtils.getLoginInfo();
-		return loginInfo;
-
+			UserUtils.getSubject().login(pigxToken);
+			FormFilter.onLoginSuccess(request,response);
+		} catch (AuthenticationException e) {
+			FormFilter.onLoginFailure(e, request, response);
+		}
+		return null;
 	}
 	
 	/**

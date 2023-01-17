@@ -250,7 +250,7 @@ spring:
 
   # 环境名称（注意：不可设置为 test 它是单元测试专用的名称）
   profiles:
-    active: default
+    active: default,sso
 
   # 打印横幅
   main:

@@ -1,11 +1,13 @@
 package com.jeesite.common.shiro.authc;
 
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Map;
 
 public class PigxToken extends FormToken{
     @Setter
+    @Getter
     private String code;
 
     public PigxToken(){

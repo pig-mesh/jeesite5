@@ -159,13 +159,13 @@ public class LoginController extends BaseController{
 
 		// 验证下用户权限，以便调用doGetAuthorizationInfo方法，保存单点登录登出句柄
 		Subject subject = SecurityUtils.getSubject();
-		if (!subject.isPermitted("user")){
-			subject.logout();
-			String queryString = request.getQueryString();
-			queryString = queryString == null ? "" : "?" + queryString;
-			ServletUtils.redirectUrl(request, response, adminPath + "/login" + queryString);
-			return null;
-		}
+//		if (!subject.isPermitted("user")){
+//			subject.logout();
+//			String queryString = request.getQueryString();
+//			queryString = queryString == null ? "" : "?" + queryString;
+//			ServletUtils.redirectUrl(request, response, adminPath + "/login" + queryString);
+//			return null;
+//		}
 
 		// 获取登录用户信息，未加载shiro模块时会为空，直接访问则提示操作权限不足。
 		LoginInfo loginInfo = UserUtils.getLoginInfo();
